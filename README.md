@@ -6,11 +6,11 @@ Using YouTube's, Instagram's, X's(open to other apps as well) Data APIs we will 
 
 ## Contributers
 
-Erik Haller
-Kyle Johnson
-Ethan Kissell
-Araceli Luna-Cabral
-Renata Zurita
+- Erik Haller
+- Kyle Johnson
+- Ethan Kissell
+- Araceli Luna-Cabral
+- Renata Zurita
 
 ## Technology
 
