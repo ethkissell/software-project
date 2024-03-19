@@ -1,0 +1,16 @@
+1. Decisions Made
+
+Try to be ambitious --- what exactly do we want it to be, what features
+Database design -- get specifics down
+Keep doc in repository updated
+Figure out who is in charge of front-end, back end, etc.
+
+2. Alternative Actions/options discussed
+
+Use case --- maybe update it?
+
+3. Follow-up items, including agreed-on roles and responsibilities
+
+
+
+4. Misc.
