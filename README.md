@@ -6,13 +6,11 @@ Using YouTube's, Instagram's, X's(open to other apps as well) Data APIs we will 
 
 ## Contributers
 
-| Name | Email |
-| ---- | ----- |
-| Erik Haller | erha2561@colorado.edu |
-| Kyle Johnson | kyjo1355@colorado.edu |
-| Ethan Kissell | etki8914@colorado.edu |
-| Araceli Luna-Cabral | arlu8757@colorado.edu |
-| Renata Zurita| vazu2103@colorado.edu |
+Erik Haller
+Kyle Johnson
+Ethan Kissell
+Araceli Luna-Cabral
+Renata Zurita
 
 ## Technology
 
