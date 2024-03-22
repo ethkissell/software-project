@@ -77,10 +77,14 @@ app.use(
 app.get('/', (req, res) => {
     res.redirect('login');
 });
+
 app.get('/login', (req, res) => {
     res.render('pages/login')
 });
 
+app.get('/register', (req, res) => {
+    res.render('pages/register');
+});
 
 
 // *****************************************************
