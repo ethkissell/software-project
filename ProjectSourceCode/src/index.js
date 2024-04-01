@@ -86,6 +86,10 @@ app.get('/register', (req, res) => {
     res.render('pages/register');
 });
 
+app.get('/home', (req,res) => {
+    res.render('pages/home');
+})
+
 
 // *****************************************************
 // <!-- Section 5 : Start Server-->
