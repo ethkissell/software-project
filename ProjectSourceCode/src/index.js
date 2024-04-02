@@ -90,6 +90,14 @@ app.get('/home', (req,res) => {
     res.render('pages/home');
 })
 
+app.get('/profile', (req,res) => {
+    res.render('pages/profile');
+})
+
+app.get('/stats1', (req,res) => {
+    res.render('pages/stats1');
+})
+
 
 // *****************************************************
 // <!-- Section 5 : Start Server-->
