@@ -1,3 +1,18 @@
 Meeting #2
 04-02-24
 
+1 Progress: 
+Started building databases
+Completed user stories and epics, people chose the stories they wanted to work on
+Began coding the UIs for multiple different pages, coding is still in early stages
+Work done on login, home, and stats pages.
+
+Next Meeting, Decisions Made:
+Work more on front end and back end completion
+User tests, getting directery structure ready, work on adding more code so we can show physical work during the next TA meeting.
+
+Alternative options discussed:
+Suggestion: Specialize on front end or back end over picking up projects randomly
+
+Folow up items and questions:
+We should create two seperate epics for lab 10 instead of one, one created by the group and one for individuals.
