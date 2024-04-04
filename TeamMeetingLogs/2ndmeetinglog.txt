@@ -1,7 +1,7 @@
 Meeting #2
 04-02-24
 
-1 Progress: 
+Progress: 
 Started building databases
 Completed user stories and epics, people chose the stories they wanted to work on
 Began coding the UIs for multiple different pages, coding is still in early stages
