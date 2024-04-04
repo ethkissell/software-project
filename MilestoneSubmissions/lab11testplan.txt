@@ -1,0 +1,22 @@
+Analyze the product: 
+
+Feature 1: Login Page
+- Test Case: When the user enters a username and password that has been registered, the log in should work and redirect the user to the home page of their account. If the user enters an incorrect username or password, the log in button will not function and an error message will be displayed.
+- Test Data: The user’s email address and password that will be entered into the corresponding fields. These will be compared with the usernames and passwords stored in our database to see if a matching username and password set has been registered.
+- Test Environment: localhost
+- Test Results: We can test for a successful input. Upon entering a correct username and password, should return a status code of 200.
+- User Acceptance Testers: Our group will be the ones who run these acceptance tests (Developers).
+
+Feature 2: Stats Page API
+- Test Case: When the user navigates to the stats page it should propagate with information about specific channels that you have watched the most.
+- Test Data: the users email in order to connect to the database and return relevant info
+- Environment: localhost
+- Results: data should display without errors or missing information and return a 200 page code
+- User Acceptance Testers: Developers 
+
+Feature 3: Home Page API
+- Test Case: Home Page should display general YouTube statistics for that year. Home page should be able to connect to google through user login and grab data.
+- Test Data: User email must successfully connect through Google login.
+- Environment: localhost
+- Results: Will return 200  in page code and display correct data on home page. 
+- User Acceptance Testers: developers
