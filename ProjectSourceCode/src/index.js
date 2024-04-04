@@ -81,6 +81,33 @@ app.get('/', (req, res) => {
 app.get('/login', (req, res) => {
     res.render('pages/login')
 });
+app.post('/login', async (req, res) => {
+    try {
+        // get user from table
+        const user = await db.oneOrNone(`SELECT * FROM users WHERE username = $1`, req.body.username);
+
+        // if user does not exist
+        if (!user) {
+            return res.redirect('/register');
+        }
+
+        // get password then compare to see if they match
+        const pass = await bcrypt.compare(req.body.password, user.password);
+        // redirect to login and send message
+        if (!pass) {
+            return res.render('/login', { message: 'Incorrect username or password.'});
+        }
+
+        // save user in session variable
+        req.session.user = user;
+        req.session.save();
+
+        res.redirect('/home');
+    } catch (error) {
+        console.log(error);
+        res.render('/login', { message: 'An error occured. Please try again.'});
+    }
+});
 
 app.get('/register', (req, res) => {
     res.render('pages/register');
