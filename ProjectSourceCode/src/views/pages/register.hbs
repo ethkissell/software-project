@@ -1,1 +1,50 @@
-<a href="/login">back to login</a>
+
+
+<style>
+    .register-button {
+        text-align: center;
+        padding: 10px;
+        color:white;
+        background-color: #282828;
+        border-radius: 4px;
+        border: 2px solid #484848;
+        transition-duration: 0.2s;
+        width: 100px;
+    }   
+    .register-button:hover {
+        background-color: #ff0000;
+        border: 2px solid #cc0000;
+    }
+</style>
+
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-md-4">
+            <br>
+            <h1 style="text-align: center;">Register</h1>
+            <hr>
+            <form action="/login" method="POST">
+                <div class="row">
+                    <div class="col">
+                        <label for="username">Username</label>
+                        <input id="username" name="username" class="form-control">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label for="password">Password</label>
+                        <input id="password" name="password" class="form-control">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <br>
+                        <button type="submit" class="register-button">Register</button>
+                        <p class="login-text" style="display:inline-block; padding:34px;">Already have an account?  <a href="/login">Login here</a></p>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+

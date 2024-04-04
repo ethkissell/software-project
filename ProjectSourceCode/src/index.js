@@ -111,7 +111,29 @@ app.post('/login', async (req, res) => {
 
 app.get('/register', (req, res) => {
     res.render('pages/register');
+
 });
+
+app.post('/register', async (req, res) => {
+    try{
+        //hash the password using bcrypt library
+        const hash = await bcrypt.hash(req.body.password, 10);
+        const query = 'INSERT INTO users (username,password) VALUES ($1,$2)';
+        const val = [req.body.username,hash ];
+        await db.query(query, val);
+        //redirects to login if success 
+        res.redirect('/login');
+      
+    }
+
+    catch (err) {
+
+        res.redirect('/register');
+  
+  }
+     
+});
+  
 
 app.get('/home', (req,res) => {
     res.render('pages/home');
