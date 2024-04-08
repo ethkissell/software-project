@@ -135,9 +135,45 @@ app.post('/register', async (req, res) => {
 });
   
 
-app.get('/home', (req,res) => {
-    res.render('pages/home');
-})
+//app.get('/home', (req,res) => {
+//    res.render('pages/home');
+//})
+app.get('/home', async(req, res) => {
+    axios({
+        url: `https://www.googleapis.com/youtube/v3/activities`,
+        method: 'GET',
+        dataType: 'json',
+        headers: {
+          'Accept-Encoding': 'application/json',
+        },
+        params: {
+          
+          part: 'contentDetails', //what sort of data you want returned, i think?
+          channelId: 'UC_x5XG1OV2P6uZZ5FSM9Ttw', //put channel Id here, duh. should fetch from user on log in?
+          key: process.env.API_KEY,
+          maxResults: 10 // you can choose the max number of things you would like to return
+          //publishedAfter: 2024-01-01T01:01:01.01+01:00 //this one is kinda hard to figure out. gets all info after date
+        },
+      })
+        .then(results => {
+          console.log(results.data); // the results will be displayed on the terminal if the docker containers are running // Send some parameters
+          res.render('pages/home', {
+            results,
+            message: 'happy happy happy',
+          });
+        })
+        .catch(error => {
+            res.status(500).json({
+                error,
+            });
+            res.render('pages/home', {
+                results: [],
+                error: true,
+                message: error.message,
+            });
+        });
+    
+  });
 
 app.get('/profile', (req,res) => {
     res.render('pages/profile');
