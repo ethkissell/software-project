@@ -176,17 +176,26 @@ app.get('/home', async(req, res) => {
   });
 
 app.get('/profile', (req,res) => {
-    res.render('pages/profile');
-})
+    res.render('pages/profile', {
+        username: req.session.user.username,
+        email: req.session.user.email,
+        password: req.session.user.password,
+    });
+});
 
 app.get('/stats1', (req,res) => {
     res.render('pages/stats1');
 })
+
+app.get('/welcome', (req, res) => {
+    res.json({status: 'success', message: 'Welcome!'});
+  });
 
 
 // *****************************************************
 // <!-- Section 5 : Start Server-->
 // *****************************************************
 // starting the server and keeping the connection open to listen for more requests
-app.listen(3000);
+//app.listen(3000);
+module.exports = app.listen(3000);
 console.log('Server is listening on port 3000');
