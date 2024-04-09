@@ -176,8 +176,12 @@ app.get('/home', async(req, res) => {
   });
 
 app.get('/profile', (req,res) => {
-    res.render('pages/profile');
-})
+    res.render('pages/profile', {
+        username: req.session.user.username,
+        email: req.session.user.email,
+        password: req.session.user.password,
+    });
+});
 
 app.get('/stats1', (req,res) => {
     res.render('pages/stats1');
