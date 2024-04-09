@@ -1,6 +1,6 @@
 // ********************** Initialize server **********************************
 
-const server = require('../index'); //TODO: Make sure the path to your index.js is correctly added
+const server = require('../src/index'); //TODO: Make sure the path to your index.js is correctly added
 
 // ********************** Import Libraries ***********************************
 
@@ -63,7 +63,7 @@ describe('Testing Register API', () => {
     chai
       .request(server)
       .post('/register')
-      .send({username: '', email: '', password: ''})
+      .send({username: '', password: ''})
       .end((err, res) => {
         expect(res).to.have.status(200);
         expect(res.body.message).to.equals('Success');
@@ -82,7 +82,7 @@ describe('Testing Register API', () => {
     chai
       .request(server)
       .post('/register')
-      .send({username: '', email: '', password: ''})
+      .send({username: '', password: ''})
       .end((err, res) => {
         expect(res).to.have.status(400);
         expect(res.body.message).to.equals('Email does not exist or does not have an existing YouTube account');
