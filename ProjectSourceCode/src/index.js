@@ -187,6 +187,11 @@ app.get('/stats1', (req,res) => {
     res.render('pages/stats1');
 })
 
+app.get('/logout', (req, res) => {
+    req.session.destroy();
+    res.render('pages/login');
+});
+
 app.get('/welcome', (req, res) => {
     res.json({status: 'success', message: 'Welcome!'});
   });
