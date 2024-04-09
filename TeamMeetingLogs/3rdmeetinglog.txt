@@ -1,0 +1,20 @@
+Meeting #3
+04-09
+
+Progress: Majority of basic UI for each page comppleted as well as some basic functions are implemented
+Implemented some basic YouTube API functions for testing
+Creted a table to store login informations from users
+    (Primarily going to focus on API calls)
+Demonstrated website functionality
+
+Alternate Options:
+Try and improve the style, make it stand out and look more visually appealing
+
+Other:
+TA will add more comments on project later
+
+Next Meeting:
+Continue working on app, try and finish before the end of this week (don't leave core functionalities to the last minute)
+Looking for a full on demo by next weeks meeting
+Small up and styles should be left for the last week of the project
+
