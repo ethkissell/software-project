@@ -127,8 +127,9 @@ app.post('/register', async (req, res) => {
     }
 
     catch (err) {
-
+        
         res.redirect('/register');
+        
   
   }
      
