@@ -80,15 +80,15 @@ describe('Testing Register API', () => {
 }); 
 
 
-/*
-Basic test functions for Login API, UNTESTED
+
+//Basic test functions for Login API, UNTESTED
 describe('Testing Login API', () => {
   it('positive : /login', done => {
     // Refer above for the positive testcase implementation
     chai
       .request(server)
       .post('/login')
-      .send({username: 'test', password: 'test'})
+      .send({username: 'test', password: 'pass'})
       .end((err, res) => {
         expect(res).to.have.status(200);
         //expect(res.body.message).to.equals('');
@@ -107,4 +107,4 @@ describe('Testing Login API', () => {
         done();
       });
   });
-}); */
+}); 
