@@ -88,7 +88,7 @@ describe('Testing Login API', () => {
     chai
       .request(server)
       .post('/login')
-      .send({username: 'test', password: 'pass'})
+      .send({username: 'TEST', password: 'TesT'})
       .end((err, res) => {
         expect(res).to.have.status(200);
         //expect(res.body.message).to.equals('');
