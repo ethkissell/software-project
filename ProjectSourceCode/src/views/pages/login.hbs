@@ -22,8 +22,18 @@
         }
 
         .login-button:hover {
-            background-color: #0000EE;
-            border: 2px solid #0026ff;
+            background-color: #ff0000;
+            border: 2px solid #ee0000;
+        }
+
+        #login-box {
+            background-color: #ffffff;
+            padding: 25px;
+            border-radius: 10px;
+        }
+
+        body {
+            background-image: linear-gradient(to bottom right, #ff0000, #282828);
         }
     </style>
     <meta charset="UTF-8">
@@ -32,37 +42,57 @@
 </head>
 
 <body>
+    {{!-- <div class="container-fluid">
+        <div class="row justify-content-center align-items-center">
+            <div class="col-md-4" id="login-box">
+                <div class="text-center">
+                    <h3>Sign-In with Google</h3>
+                    <hr>
+                    <form action="/login" method="POST" class="d-inline-block">
+                        <div class="g-signin2" data-onsuccess="onSignIn">
+                            <p class="login-text">Google</p>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div> --}}
+
     <div class="container-fluid">
-        <div class="row justify-content-center">
-            <div class="col-md-4">
-                <br>
-                <h1 style="text-align: center;">Login</h1>
-                <hr>
-                <form action="/login" method="POST">
-                    <div class="row">
-                        <div class="col">
-                            <label for="username">Username</label>
-                            <input id="username" name="username" class="form-control">
+        <div class="row justify-content-center align-items-center">
+            <div class="col-md-4" id="login-box">
+                <div class="text-center">
+                    <h1>Login</h1>
+                    <hr>
+                    <form action="/login" method="POST" class="d-inline-block">
+                        <div class="row">
+                            <div class="col" style="padding:5px;">
+                                <label for="username">Username</label>
+                                <input id="username" type="username" name="username" class="form-control">
+                            </div>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="col">
-                            <label for="password">Password</label>
-                            <input id="password" name="password" class="form-control">
+                        <div class="row">
+                            <div class="col" style="padding:5px;">
+                                <label for="password">Password</label>
+                                <input id="password" name="password" type="password" class="form-control">
+                            </div>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="col">
-                            <br>
-                            <button type="submit" class="login-button">Login</button>
-                            <p class="register-text" style="display:inline-block; padding:34px;">Don't have an account?
-                                <a href="/register">Register</a></p>
+                        <div class="row">
+                            <div class="col">
+                                <br>
+                                <button type="submit" class="login-button">Login</button>
+                                <p class="register-text" style="display:inline-block; padding:10px;">Don't have an account?
+                                    <a href="/register">Register</a>
+                                </p>
+
+                                <div style="text-align:center;padding-top:10px;" class="d-inline-block">
+                                    <div class="g-signin2" data-onsuccess="onSignIn" id="google-button"></div>
+                                    {{!-- <p class="login-text" style="padding-top:10px;">Sign in with Google</p> --}}
+                                </div>
+                            </div>
                         </div>
-                        
-                            <div class="g-signin2" data-onsuccess="onSignIn"></div>
-                            <p class="login-text">Sign in with Google</p>
-                    </div>
-                </form>
+                    </form>
+                </div>
             </div>
         </div>
     </div>

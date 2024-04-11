@@ -22,52 +22,56 @@
         }
 
         .register-button:hover {
-            background-color: #0000EE;
-            border: 2px solid #0026ff;
+            background-color: #ff0000;
+            border: 2px solid #ee0000;
+        }
+
+        #login-box {
+            background-color: #ffffff;
+            padding: 25px;
+            border-radius: 10px;
+        }
+
+        body {
+            background-image: linear-gradient(to bottom right, #ff0000, #282828);
         }
     </style>
 </head>
 
 <body>
     <div class="container-fluid">
-        <div class="row justify-content-center">
-            <div class="col-md-4">
-                <br>
-                <h1 style="text-align: center;">Register</h1>
-                <hr>
-                <form action="/register" method="POST">
-                    <div class="row">
-                        <div class="col">
-                            <label for="username">Username</label>
-                            <input id="username" type="username" name="username" class="form-control">
+        <div class="row justify-content-center align-items-center">
+            <div class="col-md-4" id="login-box">
+                <div class="text-center">
+                    <h1>Register</h1>
+                    <hr>
+                    <form action="/register" method="POST" class="d-inline-block">
+                        <div class="row">
+                            <div class="col" style="padding:5px;">
+                                <label for="username">Username</label>
+                                <input id="username" type="username" name="username" class="form-control">
+                            </div>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="col">
-                            <label for="password">Password</label>
-                            <input id="password" type="password" name="password" class="form-control">
+                        <div class="row">
+                            <div class="col" style="padding:5px;">
+                                <label for="password">Password</label>
+                                <input id="password" type="password" name="password" class="form-control">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <br>
+                                <button type="submit" class="register-button">Register</button>
+                                <p class="login-text" style="display:inline-block; padding:10px;">Already have an account?
+                                    <a href="/login">Login</a>
+                                </p>
 
+                                {{!-- <div class="g-signin2" data-onsuccess="onSignIn"></div>
+                                <p class="login-text">Sign in with Google</p> --}}
+                            </div>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="col">
-                            <br>
-                            <button type="submit" class="register-button">Register</button>
-                            <p class="login-text" style="display:inline-block; padding:34px;">Already have an account?
-                                <a href="/login">Login here</a>
-                            </p>
-                            <div class="g-signin2" data-onsuccess="onSignIn"></div>
-                            <p class="login-text">Sign in with Google</p>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col">
-                            
-                            
-                        </div>
-                    </div>
-
-                </form>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
