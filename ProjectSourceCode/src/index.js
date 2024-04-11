@@ -86,36 +86,43 @@ app.post('/login', async (req, res) => {
         // get user from table
         const user = await db.oneOrNone(`SELECT * FROM users WHERE username = $1`, req.body.username);
 
-        // if user does not exist
+        // if user does not exist in database
         if (!user) {
-            return res.redirect('/register');
+            //console.log('user not pass!!!!!!!!!!!!!! ------------------------');
+            return res.status(400).render('pages/register');
         }
 
         // get password then compare to see if they match
         const pass = await bcrypt.compare(req.body.password, user.password);
         // redirect to login and send message
         if (!pass) {
-            return res.render('/login', { message: 'Incorrect username or password.'});
+            //console.log('pass not pass!!!!!!!!!! ---------------------------');
+            return res.status(400).render('pages/login');
         }
-
+        //console.log('LOGIN PASS!!!!!!!! ---------------------------');
         // save user in session variable
         req.session.user = user;
         req.session.save();
+        
 
         res.redirect('/home');
     } catch (error) {
         console.log(error);
-        res.render('/login', { message: 'An error occured. Please try again.'});
+        res.status(500).render('/login');
     }
 });
 
 app.get('/register', (req, res) => {
     res.render('pages/register');
-
 });
 
 app.post('/register', async (req, res) => {
     try{
+        
+        if (req.body.username == req.body.password) {
+            return res.status(400).render('pages/register');
+        }
+
         //hash the password using bcrypt library
         const hash = await bcrypt.hash(req.body.password, 10);
         const query = 'INSERT INTO users (username,password) VALUES ($1,$2)';
@@ -123,15 +130,12 @@ app.post('/register', async (req, res) => {
         await db.query(query, val);
         //redirects to login if success 
         res.redirect('/login');
-      
     }
 
     catch (err) {
-
+        
         res.redirect('/register');
-  
   }
-     
 });
   
 
@@ -156,7 +160,7 @@ app.get('/home', async(req, res) => {
         },
       })
         .then(results => {
-          console.log(results.data); // the results will be displayed on the terminal if the docker containers are running // Send some parameters
+          //console.log(results.data); // the results will be displayed on the terminal if the docker containers are running // Send some parameters
           res.render('pages/home', {
             results,
             message: 'happy happy happy',
@@ -186,6 +190,11 @@ app.get('/profile', (req,res) => {
 app.get('/stats1', (req,res) => {
     res.render('pages/stats1');
 })
+
+app.get('/logout', (req, res) => {
+    req.session.destroy();
+    res.render('pages/login');
+});
 
 app.get('/welcome', (req, res) => {
     res.json({status: 'success', message: 'Welcome!'});
