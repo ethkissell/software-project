@@ -88,6 +88,7 @@ app.post('/login', async (req, res) => {
 
         // if user does not exist in database
         if (!user) {
+            //console.log('user not pass!!!!!!!!!!!!!! ------------------------');
             return res.status(400).render('pages/register');
         }
 
@@ -95,12 +96,14 @@ app.post('/login', async (req, res) => {
         const pass = await bcrypt.compare(req.body.password, user.password);
         // redirect to login and send message
         if (!pass) {
+            //console.log('pass not pass!!!!!!!!!! ---------------------------');
             return res.status(400).render('pages/login');
         }
-
+        //console.log('LOGIN PASS!!!!!!!! ---------------------------');
         // save user in session variable
         req.session.user = user;
         req.session.save();
+        
 
         res.redirect('/home');
     } catch (error) {
@@ -157,7 +160,7 @@ app.get('/home', async(req, res) => {
         },
       })
         .then(results => {
-          console.log(results.data); // the results will be displayed on the terminal if the docker containers are running // Send some parameters
+          //console.log(results.data); // the results will be displayed on the terminal if the docker containers are running // Send some parameters
           res.render('pages/home', {
             results,
             message: 'happy happy happy',
