@@ -1,47 +1,72 @@
-<style>
-    .login-button {
-        text-align: center;
-        padding: 10px;
-        color:white;
-        background-color: #282828;
-        border-radius: 4px;
-        border: 2px solid #484848;
-        transition-duration: 0.2s;
-        width: 100px;
-    }   
-    .login-button:hover {
-        background-color: #ff0000;
-        border: 2px solid #cc0000;
-    }
-</style>
+<!DOCTYPE html>
+<html lang="en">
 
-<div class="container-fluid">
-    <div class="row justify-content-center">
-        <div class="col-md-4">
-            <br>
-            <h1 style="text-align: center;">Login</h1>
-            <hr>
-            <form action="/login" method="POST">
-                <div class="row">
-                    <div class="col">
-                        <label for="username">Username</label>
-                        <input id="username" name="username" class="form-control">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <!-- Include the Google Platform Library script tag -->
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+    <meta name="google-signin-client_id"
+        content="412934845133-0j3sniovr8mt5nljdl0egtdjv761ru44.apps.googleusercontent.com">
+    <style>
+        .login-button {
+            text-align: center;
+            padding: 10px;
+            color: white;
+            background-color: #282828;
+            border-radius: 4px;
+            border: 2px solid #484848;
+            transition-duration: 0.2s;
+            width: 100px;
+        }
+
+        .login-button:hover {
+            background-color: #0000EE;
+            border: 2px solid #0026ff;
+        }
+    </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+</head>
+
+<body>
+    <div class="container-fluid">
+        <div class="row justify-content-center">
+            <div class="col-md-4">
+                <br>
+                <h1 style="text-align: center;">Login</h1>
+                <hr>
+                <form action="/login" method="POST">
+                    <div class="row">
+                        <div class="col">
+                            <label for="username">Username</label>
+                            <input id="username" name="username" class="form-control">
+                        </div>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col">
-                        <label for="password">Password</label>
-                        <input id="password" name="password" class="form-control">
+                    <div class="row">
+                        <div class="col">
+                            <label for="password">Password</label>
+                            <input id="password" name="password" class="form-control">
+                        </div>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col">
-                        <br>
-                        <button type="submit" class="login-button">Login</button>
-                        <p class="register-text" style="display:inline-block; padding:34px;">Don't have an account? <a href="/register">Register</a></p>
+                    <div class="row">
+                        <div class="col">
+                            <br>
+                            <button type="submit" class="login-button">Login</button>
+                            <p class="register-text" style="display:inline-block; padding:34px;">Don't have an account?
+                                <a href="/register">Register</a></p>
+                        </div>
+                        
+                            <div class="g-signin2" data-onsuccess="onSignIn"></div>
+                            <p class="login-text">Sign in with Google</p>
                     </div>
-                </div>
-            </form>
+                </form>
+            </div>
         </div>
     </div>
-</div>
+    <script src="index.js"></script>
+</body>
+
+</html>
