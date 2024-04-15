@@ -11,9 +11,14 @@ Using YouTube's, Instagram's, X's(open to other apps as well) Data APIs we will 
 - Araceli Luna-Cabral
 - Renata Zurita
 
-## Technology
+## Technology Stack
 
-...
+- HTML/CSS/Handlebars
+- Bootstrap
+- Javascript/NodeJS
+- MySQL
+- ... web service ...
+- Docker
 
 ## Prerequisites
 
