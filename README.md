@@ -16,8 +16,8 @@ Using YouTube's, Instagram's, X's(open to other apps as well) Data APIs we will 
 - HTML/CSS/Handlebars
 - Bootstrap
 - Javascript/NodeJS
-- MySQL
-- ... web service ...
+- PostgreSQL
+- Azure
 - Docker
 
 ## Prerequisites
