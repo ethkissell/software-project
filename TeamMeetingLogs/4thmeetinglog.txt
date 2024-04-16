@@ -1,0 +1,18 @@
+Meeting #4
+04-16-24
+
+Progress:
+Only have a rudimentary way implemented.
+API calls begin working on, shows most watched videos and times
+Updates to UI for majority of the pages to make it look more appealing.
+
+Alternate Options:
+Work on trying to impliment google sign in without firebase
+Make sure that menu options (home and profile options) are not accessable if user is not logged in.
+Decrease the size of the carosel cards so you don't have to scroll down to see
+Implement a way for user to input YouTube handle/ID to get data from, leave one person to work on the sign in issue.
+    Prioritize manual methed
+    Go to office hours
+
+Other:
+Make multiple stats pages for channels, videos, etc.
