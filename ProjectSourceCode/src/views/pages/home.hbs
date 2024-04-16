@@ -23,23 +23,23 @@
       </div>
       <div class="carousel-inner">
         <div class="carousel-item active container" id="carousel-item-1">
-          <img src={{info.[1]}} class="d-block w-100" alt="test image">
+          <img src={{info.[0].thumbnails.maxres.url}} class="d-block w-100" alt="test image">
           <div class="carousel-caption d-none d-md-block">
             <div class="card">
               <h5 class="card-title">First Video Watched</h5>
               <div class="card-body">
-                <p class="card-text"> {{info.[0]}} <a href="">With Dummy Link!</a></p>
+                <p class="card-text"> {{info.[0].title}} <a href="">With Dummy Link!</a></p>
               </div>
             </div>
           </div>
         </div>
         <div class="carousel-item container" id="carousel-item-2">
-          <img src={{info.[3]}} class="d-block w-100" alt="test image">
+          <img src={{info.[1].thumbnails.maxres.url}} class="d-block w-100" alt="test image">
           <div class="carousel-caption d-none d-md-block">
             <div class="card">
               <h5 class="card-title">Last Video Watched</h5>
               <div class="card-body">
-                <p class="card-text">{{info.[2]}}</p>
+                <p class="card-text">{{info.[1].title}}</p>
               </div>
             </div>
           </div>

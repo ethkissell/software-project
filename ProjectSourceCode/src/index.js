@@ -258,15 +258,13 @@ async function vidCall(array, info) { //was originally going to get highest rate
         })
         //let info = [];
 
-        /*console.log(values.data.items[0].snippet.thumbnails);
+        //console.log(values.data.items[0].snippet.thumbnails);
         console.log(values.data.items[0].snippet);
-        console.log(values.data);*/
+        //console.log(values.data);
         var count = values.data.pageInfo.resultsPerPage - 1;
 
-        info[0] = String(values.data.items[count].snippet.localized.title);
-        info[1] = String(values.data.items[count].snippet.thumbnails.maxres.url);
-        info[2] = String(values.data.items[0].snippet.localized.title);
-        info[3] = String(values.data.items[0].snippet.thumbnails.maxres.url);
+        info[0] = values.data.items[count].snippet;
+        info[1] = values.data.items[0].snippet;
 
         //console.log(info);
         return info;
