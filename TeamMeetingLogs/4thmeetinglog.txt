@@ -2,8 +2,8 @@ Meeting #4
 04-16-24
 
 Progress:
-Only have a rudimentary way implemented.
-API calls begin working on, shows most watched videos and times
+Only have a rudimentary sign in way implemented.
+Began working on API calls, shows most watched videos and times
 Updates to UI for majority of the pages to make it look more appealing.
 
 Alternate Options:
