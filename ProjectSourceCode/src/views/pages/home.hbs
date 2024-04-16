@@ -23,29 +23,28 @@
       </div>
       <div class="carousel-inner">
         <div class="carousel-item active container" id="carousel-item-1">
-          <img src="https://www.reusableart.com/wp-content/uploads/2014/03/bw-dogs-19.jpg" class="d-block w-100" alt="test image">
+          <img src={{info.[1]}} class="d-block w-100" alt="test image">
           <div class="carousel-caption d-none d-md-block">
             <div class="card">
-              <h5 class="card-title">Most Watched Channel</h5>
+              <h5 class="card-title">First Video Watched</h5>
               <div class="card-body">
-                <p class="card-text">example text <a href="">With Dummy Link!</a>
-                <br> and also some data {{results.data.etag}} </p>
+                <p class="card-text"> {{info.[0]}} <a href="">With Dummy Link!</a></p>
               </div>
             </div>
           </div>
         </div>
         <div class="carousel-item container" id="carousel-item-2">
-          <img src="https://www.reusableart.com/wp-content/uploads/2016/02/grey-elephant.png" class="d-block w-100" alt="test image">
+          <img src={{info.[3]}} class="d-block w-100" alt="test image">
           <div class="carousel-caption d-none d-md-block">
             <div class="card">
-              <h5 class="card-title">Most Watched... Video?</h5>
+              <h5 class="card-title">Last Video Watched</h5>
               <div class="card-body">
-                <p class="card-text">example text 2.0</p>
+                <p class="card-text">{{info.[2]}}</p>
               </div>
             </div>
           </div>
         </div>
-        <div class="carousel-item container" id="carousel-item-3">
+        <!--<div class="carousel-item container" id="carousel-item-3">
           <img src="https://www.reusableart.com/wp-content/uploads/2019/02/field-voles.jpeg" class="d-block w-100" alt="test image">
           <div class="carousel-caption d-none d-md-block">
             <div class="card">
@@ -55,7 +54,7 @@
               </div>
             </div>
           </div>
-        </div>
+        </div>-->
       </div>
       <div>
        <button class="carousel-control-prev" type="button" href="#projectCarousel" data-bs-slide="prev" id="carousel-next">
