@@ -3,29 +3,47 @@
         body {
             background-image: linear-gradient(to bottom right, #ff0000, #282828);
         }
+         #profile-box {
+            background-color: #ffffff;
+            padding: 25px;
+            border-radius: 5px;
+        }
     </style>
-    <h1 style="color:white;text-align: center;">User Profile</h1>
+   
 </head>
 
 <body>
-    <table class="table">
-        <tr>
-            <th>
-                <td style="font:bold">USERNAME: </td>
-            </th>
-            <th>{{username}}</th>
-        </tr>
-        <tr>
-            <th>
-                <td style="font:bold">EMAIL ADDRESS: </td>
-            </th>
-            <th>placeholder</th>
-        </tr>
-        <tr>
-            <th>
-                <td style="font:bold">PASSWORD: </td>
-            </th>
-            <th style="-webkit-text-security: circle">{{password}}</th>
-        </tr>
-    </table>
+    <div class = "container-fluid">
+        <div class = "row justify-content-center align-items-center">
+            <div class="col-md-6" id="profile-box">
+                <div class = "text-center">
+                    <h1 style="text-align: center;">User Profile</h1>
+                     <hr>
+                     <table class="table">
+                        <tr>
+                            <th>
+                                <td style="font:bold">USERNAME: </td>
+                             </th>
+                            <th>{{username}}</th>
+                        </tr>
+                         <tr>
+                            <th>
+                                <td style="font:bold">EMAIL ADDRESS: </td>
+                            </th>
+                            <th>placeholder</th>
+                        </tr>
+                        <tr>
+                            <th>
+                                <td style="font:bold">PASSWORD: </td>
+                            </th>
+                            <th style="-webkit-text-security: circle">{{password}}</th>
+                        </tr>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+        
+    </div>
+   
 </body>
