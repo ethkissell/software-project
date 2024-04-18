@@ -1,48 +1,69 @@
-<div class="container">
-    <h1>Home</h1>
+
+<head>
+    <style>
+        body {
+            background-image: linear-gradient(to bottom right, #ff0000, #282828);
+        }
+
+    </style>
+</head>
+
+
+<div class="container" >
+    <h1  style="color:white; ">Home</h1>
     <br>
-    <h2>Most Impressive Stats</h2>
-    <table class="table">
-        <tr>
-            <td style="font:bold">Most Watched Channel: </td>
-            <td>example</td>
+    <h2 style="color:white; ">Most Impressive Stats</h2>
+    <table class="table"  style="border-collapse: collapse; border-color: transparent;">
+        <tr >
+            <td style="font:bold; background: linear-gradient(to right, hsla(0, 88%, 46%, 0.995), rgb(163, 34, 30)); color:white; ">Most Watched Channel: </td>
+            <td style=" background: linear-gradient(to right,rgb(163, 34, 30),rgb(135, 38, 33)); color:white; " >example</td>
         </tr>
-        <tr>
-            <td style="font:bold">Other Impressive Stat:</td>
-            <td>example</td>
+        <tr >
+            <td style="font:bold; background: linear-gradient(to right, rgb(210, 24, 21), rgb(163, 34, 30)); color:white; ">Other Impressive Stat:</td>
+            <td style=" background: linear-gradient(to right,rgb(163, 34, 30),rgb(135, 38, 33)); color:white; ">example</td>
         </tr>
     </table>
 
-    <br><br>
+    <br> <br>
 
     <div id="projectCarousel" class="carousel slide" data-ride="carousel" data-bs-touch="true">
-      <div class="carousel-indicators" id="carousel-bottom-indicators">
+      {{!-- <div class="carousel-indicators" id="carousel-bottom-indicators">
         <button type="button" data-bs-target="#projectCarouselIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
         <button type="button" data-bs-target="#projectCarouselIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
         <button type="button" data-bs-target="#projectCarouselIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
-      </div>
+      </div> --}}
       <div class="carousel-inner">
         <div class="carousel-item active container" id="carousel-item-1">
-          <img src={{info.[0].thumbnails.maxres.url}} class="d-block w-100" alt="test image">
-          <div class="carousel-caption d-none d-md-block">
-            <div class="card">
-              <h5 class="card-title">First Video Watched</h5>
-              <div class="card-body">
-                <p class="card-text"> {{info.[0].title}} <a href="">With Dummy Link!</a></p>
+          <div class = "row">
+            <img src={{info.[0].thumbnails.maxres.url}} class="d-block w-50 mx-auto" alt="test image">
+          </div>
+          <div class = "row">
+             <div class="col-md-6 mx-auto">
+              <div class="card bg-transparent border-0" >
+              <h5 class="card-title" style="color:white; ">First Video Watched</h5>
+                <div class="card-body">
+                  <p class="card-text" style="color:white; "> {{info.[0].title}} <a href="">With Dummy Link!</a></p>
               </div>
             </div>
-          </div>
+             </div>
+          </div>      
         </div>
         <div class="carousel-item container" id="carousel-item-2">
-          <img src={{info.[1].thumbnails.maxres.url}} class="d-block w-100" alt="test image">
-          <div class="carousel-caption d-none d-md-block">
-            <div class="card">
-              <h5 class="card-title">Last Video Watched</h5>
-              <div class="card-body">
-                <p class="card-text">{{info.[1].title}}</p>
-              </div>
+           <div class = "row">
+            <img src={{info.[1].thumbnails.maxres.url}} class="d-block w-50 mx-auto" alt="test image">
+           </div>
+            <div class = "row">
+               <div class="col-md-6 mx-auto">
+                <div class="card bg-transparent border-0">
+                  <h5 class="card-title" style="color:white; ">Last Video Watched</h5>
+                  <div class="card-body">
+                    <p class="card-text" style="color:white; ">{{info.[1].title}}</p>
+                  </div>
+                </div>
+               </div>
             </div>
-          </div>
+          
+
         </div>
         <!--<div class="carousel-item container" id="carousel-item-3">
           <img src="https://www.reusableart.com/wp-content/uploads/2019/02/field-voles.jpeg" class="d-block w-100" alt="test image">
