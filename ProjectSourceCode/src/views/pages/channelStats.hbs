@@ -1,0 +1,51 @@
+<head>
+    <style>
+        body {
+            background-image: linear-gradient(to bottom right, #ff0000, #282828);
+        }
+
+    </style>
+    <h1 style="color:white;text-align: center;">YouTube Wrapped Stats</h1>
+</head>
+
+
+<body>
+    <div class="container-fluid">
+        <div class="card-group">
+            {{#each info}}
+            {{#if @first}}
+            <div class="card" style="background-color: #ff0000; color:white">
+                <h5 class="card-title fw-bold" style="text-align: center;" id="name">First Video Watched: </h5>
+                <div class="card-body">
+                    <p class="card-text" id="first">Title: {{this.snippet.title}}</p>
+                    <a href="https://www.youtube.com/watch?v={{this.id}}" class="btn btn-primary" id="url" style="border: #000000; background-color:black">
+                        <img src={{this.snippet.thumbnails.maxres.url}} alt="thumbnail" width="300">
+                    </a>
+                </div>
+            </div>
+            {{/if}}
+            {{#if @last}}
+            <div class="card" style="background-color: #ff0000; color:white">
+                <h5 class="card-title fw-bold" style="text-align: center;" id="name">Last Video Watched: </h5>
+                <div class="card-body">
+                    <p class="card-text" id="first">Title: {{this.snippet.title}}</p>
+                    
+                    <a href="https://www.youtube.com/watch?v={{this.id}}" class="btn btn-primary" id="url" style="border: #000000; background-color:black">
+                        <img src={{this.snippet.thumbnails.maxres.url}} alt="thumbnail" width="300">
+                    </a>
+                </div>
+            </div>
+            {{/if}}
+            {{/each}}
+            <div class="card" style="background-color: #ff0000; color:white">
+                <h5 class="card-title fw-bold" style="text-align: center;" id="name">Most Watched: </h5>
+                <div class="card-body">
+                    <p class="card-text" id="title">Title: {{mostWatched.snippet.title}} </p>
+                    <a href="https://www.youtube.com/watch?v={{mostWatched.id}}" class="btn btn-primary" id="url" style="border: #000000; background-color:black">
+                        <img src={{mostWatched.snippet.thumbnails.maxres.url}} alt="thumbnail" width="300">
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
