@@ -12,6 +12,7 @@
 <div class="container" >
     <h1  style="color:white; ">Home</h1>
     <br>
+    <!--
     <h2 style="color:white; ">Most Impressive Stats</h2>
     <table class="table"  style="border-collapse: collapse; border-color: transparent;">
         <tr >
@@ -23,6 +24,7 @@
             <td style=" background: linear-gradient(to right,rgb(163, 34, 30),rgb(135, 38, 33)); color:white; ">example</td>
         </tr>
     </table>
+    -->
 
     <br> <br>
 
@@ -37,7 +39,7 @@
         {{#if @first}}
         <div class="carousel-item active container" id="carousel-item-1">
           <div class = "row">
-            <img src={{this.snippet.thumbnails.maxres.url}} class="d-block w-50 mx-auto" alt="test image">
+            <img src={{this.snippet.thumbnails.maxres.url}} class="d-block w-50 mx-auto" alt="thumbnail">
           </div>
           <div class = "row">
              <div class="col-md-6 mx-auto">
@@ -54,7 +56,7 @@
         {{#if @last}}
         <div class="carousel-item container" id="carousel-item-2">
            <div class = "row">
-            <img src={{this.snippet.thumbnails.maxres.url}} class="d-block w-50 mx-auto" alt="test image">
+            <img src={{this.snippet.thumbnails.maxres.url}} class="d-block w-50 mx-auto" alt="thumbnail">
            </div>
             <div class = "row">
                <div class="col-md-6 mx-auto">
@@ -66,22 +68,25 @@
                 </div>
                </div>
             </div>
-          
-
         </div>
         {{/if}}
         {{/each}}
-        <!--<div class="carousel-item container" id="carousel-item-3">
-          <img src="https://www.reusableart.com/wp-content/uploads/2019/02/field-voles.jpeg" class="d-block w-100" alt="test image">
-          <div class="carousel-caption d-none d-md-block">
-            <div class="card">
-              <h5 class="card-title">Most Looked At Comment!</h5>
-              <div class="card-body">
-                <p class="card-text">example text 3.0</p>
-              </div>
+        <div class="carousel-item container" id="carousel-item-3">
+           <div class = "row">
+            <img src={{mostWatched.snippet.thumbnails.maxres.url}} class="d-block w-50 mx-auto" alt="thumbnail">
+           </div>
+            <div class = "row">
+               <div class="col-md-6 mx-auto">
+                <div class="card bg-transparent border-0">
+                  <h5 class="card-title" style="color:white; ">Most Watched Video</h5>
+                  <div class="card-body">
+                    <p class="card-text" style="color:white; ">{{mostWatched.snippet.title}}</p>
+                    <a href="/vidStats" class="btn btn-primary" id="url" style="border: #000000; background-color:black">More Video Stats Here!</a>
+                  </div>
+                </div>
+               </div>
             </div>
-          </div>
-        </div>-->
+        </div>
       </div>
       <div>
        <button class="carousel-control-prev" type="button" href="#projectCarousel" data-bs-slide="prev" id="carousel-next">

@@ -198,7 +198,6 @@ async function manyCalls(array, nextToken) {
             'Accept-Encoding': 'application/json',
           },
           params: {
-            
             part: 'contentDetails', //what sort of data you want returned, i think?
             //id,
             channelId: 'UC_x5XG1OV2P6uZZ5FSM9Ttw', //put channel Id here, duh. should fetch from user on log in?
@@ -206,18 +205,21 @@ async function manyCalls(array, nextToken) {
             key: process.env.API_KEY,
             maxResults: 50, // you can choose the max number of things you would like to return
             publishedAfter: "2023-01-01T00:00:00.0Z", //this one is kinda hard to figure out. gets all info after date
-            publishedBefore: "2024-01-08T00:00:00.0Z",
+            publishedBefore: "2024-01-01T00:00:00.0Z",
             pageToken: nextToken
           },
         })
         //console.log(values.data);
         //console.log(values.data.items.length);
+        values.data.items.forEach(item => {
+          console.log(item.contentDetails);
+        });
 
         //testIds = await setVals(values);
         //var ids = [];
         for(let j = 0; j<values.data.items.length; j++) {
           if (values.data.items[j].contentDetails.playlistItem) {
-              console.log('CONFIRMED');
+              //console.log('CONFIRMED');
               vid = {id: values.data.items[j].contentDetails.playlistItem.resourceId.videoId,
               snippet: undefined};
               array.push(vid);
@@ -226,66 +228,98 @@ async function manyCalls(array, nextToken) {
         }
         /*console.log(array);
         console.log(values.data.nextPageToken);*/
-        if (values.data.nextPageToken == undefined) {
-          //console.log('EXITING');
+        /*if (values.data.nextPageToken == undefined) {
+          console.log('EXITING');
           return array;
         }
-        else {
+        else {*/
           nextToken = values.data.nextPageToken;
           //console.log(nextToken);
-        }
+        //}
   }
   return array;
 }
 async function vidCall(array, info) { //was originally going to get highest rated from this, but you need to have auth for that
-  let ids = '';
-  for (let i = 0; i < array.length; i++) {
+  //console.log(array);
+  let ids = array[0].id;
+  var nextToken;
+  for (let i = 1; i < array.length; i++) {
       ids = ids.concat(',', array[i].id);
   }
   //try {
-      let values = await axios({
-          url: `https://www.googleapis.com/youtube/v3/videos`,
-          method: 'GET',
-          dataType: 'json',
-          headers: {
-          'Accept-Encoding': 'application/json',
-          },
-          params: {
-          
-          part: 'snippet', //what sort of data you want returned, i think?
-          //channelId: 'UC_x5XG1OV2P6uZZ5FSM9Ttw', //put channel Id here, duh. should fetch from user on log in?
-          id: ids,
-          key: process.env.API_KEY,
-          //maxResults: 50//array.length, // you can choose the max number of things you would like to return
-          /*publishedAfter: "2023-01-01T00:00:00.0Z", //this one is kinda hard to figure out. gets all info after date
-          publishedBefore: "2023-01-08T00:00:00.0Z",*/
-          },
-      })
-      //let info = [];
+    for (let i = 0; i < array.length%50; i++){
+      if( i == 0 || nextToken) {
+        let values = await axios({
+            url: `https://www.googleapis.com/youtube/v3/videos`,
+            method: 'GET',
+            dataType: 'json',
+            headers: {
+            'Accept-Encoding': 'application/json',
+            },
+            params: {
+            
+            part: 'snippet', //what sort of data you want returned, i think?
+            //channelId: 'UC_x5XG1OV2P6uZZ5FSM9Ttw', //put channel Id here, duh. should fetch from user on log in?
+            id: ids,
+            key: process.env.API_KEY,
+            maxResults: 50,//array.length, // you can choose the max number of things you would like to return
+            /*publishedAfter: "2023-01-01T00:00:00.0Z", //this one is kinda hard to figure out. gets all info after date
+            publishedBefore: "2023-01-08T00:00:00.0Z",*/
+            pageToken: nextToken
+            },
+        })
+        //let info = [];
+        if(values.data.nextPageToken) {nextToken = values.data.nextPageToken;}
 
-      //console.log(values.data.items[0].snippet.thumbnails);
-      //console.log(values.data.items[0].snippet);
-      //console.log(values.data);
-      /*var count = values.data.pageInfo.resultsPerPage - 1;
+        //console.log(values.data.items[0].snippet.thumbnails);
+        //console.log(values.data.items[0].snippet);
+        //console.log(values.data);
+        /*var count = values.data.pageInfo.resultsPerPage - 1;
 
-      info[0] = values.data.items[0].snippet;
-      info[1] = values.data.items[count].snippet;*/
-      for(let i = 0; i < array.length; i++) {
-          var vid = {
-              id: array[i].id,
-              snippet: values.data.items[i].snippet
-          };
-          info.push(vid);
-      }
+        info[0] = values.data.items[0].snippet;
+        info[1] = values.data.items[count].snippet;*/
+        for(let i = 0; i < array.length; i++) {
+            var vid = {
+                id: array[i].id,
+                snippet: values.data.items[i].snippet
+            };
+            info.push(vid);
+        }
 
-      //console.log(info);
-      console.log(values.data.items.length);
+        //console.log(info);
+        //console.log(values.data.items.length);
+    }
+    }
       return info;
   /*}
   catch(err) {
 
   }*/
 }
+async function getMostFrequent(array) {
+  if (array.length == 0) {return 0;}
+  let arr = array.sort((c1, c2) => (c1.id < c2.id) ? 1 : (c1.id > c2.id) ? -1 : 0);
+
+  let count = {id: arr[0].id, count: 0};
+  let temp = 0;
+  for (let i = 0; i < arr.length - 1; i++) {
+    if (arr[i].id == arr[i+1].id) {
+      temp++;
+      if (temp > count.count) {
+        count.id = arr[i].id;
+        count.count = temp;
+      }
+    }
+    else {
+      temp = 0;
+    }
+  }
+  /*highest = arr[0].id;
+  for(let i = 0; i < arr.length; i++) {
+    temp = arr[i].id;
+  }*/
+  return count.id;
+};
 app.get('/test', async(req,res) => {
   
 });
@@ -309,7 +343,7 @@ app.get('/home', async(req, res) => {
             key: process.env.API_KEY,
             maxResults: 50, // you can choose the max number of things you would like to return
             publishedAfter: "2023-01-01T00:00:00.0Z", //this one is kinda hard to figure out. gets all info after date
-            publishedBefore: "2024-01-08T00:00:00.0Z",
+            publishedBefore: "2024-01-01T00:00:00.0Z",
           },
         })
         let idArray = [];
@@ -324,8 +358,11 @@ app.get('/home', async(req, res) => {
         ];*/
         
         //console.log(values.data);
-        console.log(values.data.items.length);
-        console.log(videoIds);
+        //console.log(values.data.items.length);
+        //console.log(videoIds);
+        values.data.items.forEach(item => {
+          console.log(item.contentDetails);
+        });
         if (values.data.items.length == undefined || values.data.items.length == 0) {
           res.status(500).json({
               error,
@@ -340,7 +377,7 @@ app.get('/home', async(req, res) => {
 
         for(let i = 0; i<values.data.items.length; i++) {
           if (values.data.items[i].contentDetails.playlistItem) {
-              console.log('CONFIRMED');
+              //console.log('CONFIRMED');
               //idArray[idArray.length].id = values.data.items[i].contentDetails.playlistItem.resourceId.videoId;
               let vid = {id:values.data.items[i].contentDetails.playlistItem.resourceId.videoId,
               snippet: undefined};
@@ -359,7 +396,7 @@ app.get('/home', async(req, res) => {
         temp = await manyCalls(idArray, values.data.nextPageToken);
         //console.log(temp);
         //await setIds(temp);
-        console.log('MANYCALLS ACCOMPLISHED !!!!!!!!!!!!!!!!!!!!!!!');
+        //console.log('MANYCALLS ACCOMPLISHED !!!!!!!!!!!!!!!!!!!!!!!');
 
         /*userInfo.firstVid = temp[temp.length];
         userInfo.lastVid = temp[0];*/
@@ -369,16 +406,18 @@ app.get('/home', async(req, res) => {
         info = await vidCall(temp, info);
         //info[0] = values.data.items[0].snippet;
         //console.log(info);
-        info.forEach(vid => {
+        /*info.forEach(vid => {
           console.log(vid.snippet.title);
-        });
+        });*/
+        var mostFrequent = await getMostFrequent(info);
+        var mostWatched = info.find(vid => vid.id == mostFrequent)
+        console.log(mostWatched.id);
         //var str = String(info[0]);
         //console.log(typeof info[0]);
-        
 
-        results = values;
         res.render('pages/home', {
           info,
+          mostWatched,
           message: 'happy happy happy',
         });
         
@@ -394,94 +433,117 @@ app.get('/home', async(req, res) => {
       });
   }
 });
-app.get('/test', async(req,res) => {
-    
-});
-app.get('/home', async(req, res) => {
-    try {
-        let values = await axios({
-            url: `https://www.googleapis.com/youtube/v3/activities`,
-            method: 'GET',
-            dataType: 'json',
-            headers: {
-              'Accept-Encoding': 'application/json',
-            },
-            params: {
-              
-              part: 'contentDetails', //what sort of data you want returned, i think?
-              channelId: 'UC_x5XG1OV2P6uZZ5FSM9Ttw', //put channel Id here, duh. should fetch from user on log in?
-              //channelId: 'UCs88GCjP5A3EBJb8QrNNiZQ',
-              key: process.env.API_KEY,
-              maxResults: 5, // you can choose the max number of things you would like to return
-              publishedAfter: "2023-01-01T00:00:00.0Z", //this one is kinda hard to figure out. gets all info after date
-              publishedBefore: "2023-04-09T00:00:00.0Z",
-            },
-          })
-          console.log(values.data);
-          console.log(values.data.items.length);
-          if (values.data.items.length == undefined || values.data.items.length == 0) {
-            res.status(500).json({
-                error,
-            });
-            res.render('pages/home', {
-                results: [],
-                error: true,
-                message: error.message,
-            });
-            return;
-          } 
 
-          //testIds = await setVals(values);
-          //var ids = [];
-          for(let i = 0; i<values.data.items.length; i++) {
-            if (values.data.items[i].contentDetails.playlistItem) {
-                //console.log('CONFIRMED');
-                videoIds[videoIds.length] = values.data.items[i].contentDetails.playlistItem.resourceId.videoId;
-            }
-            //console.log(values.data.items[i].contentDetails);
+app.get('/vidStats', async(req, res) => {
+  //let ourId = await getChannelID('@erikhaller5880');
+  try {
+      let values = await axios({
+          url: `https://www.googleapis.com/youtube/v3/activities`,
+          method: 'GET',
+          dataType: 'json',
+          headers: {
+            'Accept-Encoding': 'application/json',
+          },
+          params: {
+            
+            part: 'contentDetails', //what sort of data you want returned, i think?
+            //channelId: ourId,
+            channelId: 'UC_x5XG1OV2P6uZZ5FSM9Ttw', //put channel Id here, duh. should fetch from user on log in?
+            //channelId: 'UCs88GCjP5A3EBJb8QrNNiZQ',
+            key: process.env.API_KEY,
+            maxResults: 50, // you can choose the max number of things you would like to return
+            publishedAfter: "2023-01-01T00:00:00.0Z", //this one is kinda hard to figure out. gets all info after date
+            publishedBefore: "2024-01-01T00:00:00.0Z",
+          },
+        })
+        let idArray = [];
+        values.data.items.forEach(item => {
+          console.log(item.contentDetails);
+        });
+        /*let idArray = [ {
+          id: undefined, snippet: undefined
+        }];*/
+        /*let objArray = [
+          {
+              id: undefined,
+              snippet: undefined
           }
-          //console.log(videoIds);
-
-          /*if (values.data.items.length > 2) {
-            req.session.userInfo.id = 5;
-            console.log(req.session.userInfo.id);
-          }*/
-          
-          var temp = [];
-          temp = await manyCalls(videoIds, values.data.nextPageToken);
-          //console.log(temp);
-          //videoIds = temp;
-          //await setIds(temp);
-          //console.log(videoIds);
-          console.log('MANYCALLS ACCOMPLISHED !!!!!!!!!!!!!!!!!!!!!!!');
-
-          /*userInfo.firstVid = temp[temp.length];
-          userInfo.lastVid = temp[0];*/
-
-          var info = [];
-          info = await vidCall(temp, info);
-          //console.log(info);
-          //var str = String(info[0]);
-          //console.log(typeof info[0]);
-
-          results = values;
-          res.render('pages/home', {
-            info,
-            message: 'happy happy happy',
+        ];*/
+        
+        //console.log(values.data);
+        //console.log(values.data.items.length);
+        //console.log(videoIds);
+        if (values.data.items.length == undefined || values.data.items.length == 0) {
+          res.status(500).json({
+              error,
           });
-          
-    }
-    catch (error) {
-        res.status(500).json({
-            error,
+          res.render('pages/vidStats', {
+              results: [],
+              error: true,
+              message: error.message,
+          });
+          return;
+        } 
+
+        for(let i = 0; i<values.data.items.length; i++) {
+          if (values.data.items[i].contentDetails.playlistItem) {
+              //console.log('CONFIRMED');
+              //idArray[idArray.length].id = values.data.items[i].contentDetails.playlistItem.resourceId.videoId;
+              let vid = {id:values.data.items[i].contentDetails.playlistItem.resourceId.videoId,
+              snippet: undefined};
+              idArray.push(vid);
+          }
+          //console.log(values.data.items[i].contentDetails);
+        }
+        //console.log(videoIds);
+
+        /*if (values.data.items.length > 2) {
+          req.session.userInfo.id = 5;
+          console.log(req.session.userInfo.id);
+        }*/
+        
+        var temp = [];
+        temp = await manyCalls(idArray, values.data.nextPageToken);
+        console.log('NEXT PAGE TOKEN:',values.data.nextPageToken);
+        //console.log(temp);
+        //await setIds(temp);
+        //console.log('MANYCALLS ACCOMPLISHED !!!!!!!!!!!!!!!!!!!!!!!');
+
+        /*userInfo.firstVid = temp[temp.length];
+        userInfo.lastVid = temp[0];*/
+
+        var info = [];
+        
+        info = await vidCall(temp, info);
+        //info[0] = values.data.items[0].snippet;
+        //console.log(info);
+        /*info.forEach(vid => {
+          console.log(vid.snippet.title);
+        });*/
+        var mostFrequent = await getMostFrequent(info);
+        var mostWatched = info.find(vid => vid.id == mostFrequent)
+        console.log(mostWatched.id);
+        //var str = String(info[0]);
+        //console.log(typeof info[0]);
+
+        res.render('pages/vidStats', {
+          info,
+          mostWatched,
+          message: 'happy happy happy',
         });
-        res.render('pages/home', {
-            results: [],
-            error: true,
-            message: error.message,
-        });
-    }
-  });
+        
+  }
+  catch (error) {
+      res.status(500).json({
+          error,
+      });
+      res.render('pages/vidStats', {
+          results: [],
+          error: true,
+          message: error.message,
+      });
+  }
+});
 
 app.get('/profile', (req,res) => {
     res.render('pages/profile', {
