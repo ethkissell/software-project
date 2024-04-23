@@ -33,7 +33,7 @@
         <button type="button" data-bs-target="#projectCarouselIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
         <button type="button" data-bs-target="#projectCarouselIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
         <button type="button" data-bs-target="#projectCarouselIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
-      </div> --}}
+      </div> 
       <div class="carousel-inner">
         {{#each info}}
         {{#if @first}}
@@ -70,10 +70,26 @@
             </div>
         </div>
         {{/if}}
-        {{/each}}
+        {{/each}}--}}
+        <div class="carousel-item active container" id="carousel-item-1">
+          <div class = "row">
+            <img src={{freqCh.snippet.thumbnails.high.url}} class="d-block w-50 mx-auto" alt="thumbnail">
+          </div>
+          <div class = "row">
+             <div class="col-md-6 mx-auto">
+              <div class="card bg-transparent border-0" >
+              <h5 class="card-title" style="color:white; ">Most Watched Channel</h5>
+                <div class="card-body">
+                  <p class="card-text" style="color:white; "> {{freqCh.snippet.title}} </p>
+                  <a href="https://www.youtube.com/channel/{{freqCh.id}}" class="btn btn-primary" id="url" style="border: #000000; background-color:black">Video Link</a>
+              </div>
+            </div>
+             </div>
+          </div>      
+        </div>
         <div class="carousel-item container" id="carousel-item-3">
            <div class = "row">
-            <img src={{mostWatched.snippet.thumbnails.maxres.url}} class="d-block w-50 mx-auto" alt="thumbnail">
+            <img src={{mostWatched.snippet.thumbnails.maxres.url}} class="d-block w-50 h-50 mx-auto" alt="thumbnail">
            </div>
             <div class = "row">
                <div class="col-md-6 mx-auto">
@@ -81,7 +97,7 @@
                   <h5 class="card-title" style="color:white; ">Most Watched Video</h5>
                   <div class="card-body">
                     <p class="card-text" style="color:white; ">{{mostWatched.snippet.title}}</p>
-                    <a href="/vidStats" class="btn btn-primary" id="url" style="border: #000000; background-color:black">More Video Stats Here!</a>
+                    <a href="https://www.youtube.com/watch?v={{mostWatched.id}}" class="btn btn-primary" id="url" style="border: #000000; background-color:black">Video Link</a>
                   </div>
                 </div>
                </div>

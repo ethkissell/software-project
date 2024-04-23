@@ -12,6 +12,7 @@ const bodyParser = require('body-parser');
 const session = require('express-session'); // To set the session object.
 const bcrypt = require('bcrypt'); //  To hash passwords
 const axios = require('axios'); // To make HTTP requests from our server
+const { channel } = require('diagnostics_channel');
 //const firebase = require('firebase/app');
 //const fireAuth = require('firebase/auth');
 //require('');
@@ -148,7 +149,6 @@ app.post('/register', async (req, res) => {
     }
 
     catch (err) {
-        
         res.redirect('/register');
   }
 });
@@ -211,23 +211,22 @@ async function manyCalls(array, nextToken) {
         })
         //console.log(values.data);
         //console.log(values.data.items.length);
-        values.data.items.forEach(item => {
+        /*values.data.items.forEach(item => {
           console.log(item.contentDetails);
-        });
+        });*/
 
-        //testIds = await setVals(values);
-        //var ids = [];
         for(let j = 0; j<values.data.items.length; j++) {
           if (values.data.items[j].contentDetails.playlistItem) {
               //console.log('CONFIRMED');
-              vid = {id: values.data.items[j].contentDetails.playlistItem.resourceId.videoId,
-              snippet: undefined};
+              vid = {
+                id: values.data.items[j].contentDetails.playlistItem.resourceId.videoId,
+                snippet: undefined,
+                channel: undefined
+              };
               array.push(vid);
           }
           //console.log(values.data.items[i].contentDetails);
         }
-        /*console.log(array);
-        console.log(values.data.nextPageToken);*/
         /*if (values.data.nextPageToken == undefined) {
           console.log('EXITING');
           return array;
@@ -270,18 +269,12 @@ async function vidCall(array, info) { //was originally going to get highest rate
         })
         //let info = [];
         if(values.data.nextPageToken) {nextToken = values.data.nextPageToken;}
-
-        //console.log(values.data.items[0].snippet.thumbnails);
-        //console.log(values.data.items[0].snippet);
-        //console.log(values.data);
-        /*var count = values.data.pageInfo.resultsPerPage - 1;
-
-        info[0] = values.data.items[0].snippet;
-        info[1] = values.data.items[count].snippet;*/
+        
         for(let i = 0; i < array.length; i++) {
             var vid = {
                 id: array[i].id,
-                snippet: values.data.items[i].snippet
+                snippet: values.data.items[i].snippet,
+                channel: values.data.items[i].snippet.channelId
             };
             info.push(vid);
         }
@@ -290,13 +283,9 @@ async function vidCall(array, info) { //was originally going to get highest rate
         //console.log(values.data.items.length);
     }
     }
-      return info;
-  /*}
-  catch(err) {
-
-  }*/
+    return info;
 }
-async function getMostFrequent(array) {
+async function getFreqVid(array) {
   if (array.length == 0) {return 0;}
   let arr = array.sort((c1, c2) => (c1.id < c2.id) ? 1 : (c1.id > c2.id) ? -1 : 0);
 
@@ -314,15 +303,60 @@ async function getMostFrequent(array) {
       temp = 0;
     }
   }
-  /*highest = arr[0].id;
-  for(let i = 0; i < arr.length; i++) {
-    temp = arr[i].id;
-  }*/
   return count.id;
 };
-app.get('/test', async(req,res) => {
-  
-});
+
+async function getFreqChannel(array){
+  if (array.length == 0) {return 0;}
+  let arr = array.sort((c1, c2) => (c1.channel < c2.channel) ? 1 : (c1.channel > c2.channel) ? -1 : 0);
+
+  let count = {id: arr[0].id, count: 1, channel: arr[0].channel};
+  let temp = 0;
+  for (let i = 0; i < arr.length - 1; i++) {
+    if (arr[i].channel == arr[i+1].channel) {
+      temp++;
+      if (temp > count.count) {
+        count.channel = arr[i].channel;
+        count.count = temp;
+      }
+    }
+    else {
+      temp = 0;
+    }
+  }
+  try {
+    let values = await axios({
+      url: `https://www.googleapis.com/youtube/v3/channels`,
+      method: 'GET',
+      dataType: 'json',
+      headers: {
+        'Accept-Encoding': 'application/json',
+      },
+      params: {
+        
+        part: 'snippet', //what sort of data you want returned, i think?
+        //forUsername: ,
+        id: count.channel,
+        //channelId: 'UC_x5XG1OV2P6uZZ5FSM9Ttw', //put channel Id here, duh. should fetch from user on log in?
+        //channelId: 'UCs88GCjP5A3EBJb8QrNNiZQ',
+        key: process.env.API_KEY,
+        maxResults: 50, // you can choose the max number of things you would like to return
+        publishedAfter: "2023-01-01T00:00:00.0Z", //this one is kinda hard to figure out. gets all info after date
+        publishedBefore: "2024-01-01T00:00:00.0Z",
+      },
+    })
+    console.log(values.data.items);
+    let channel = {
+      id: values.data.items[0].id,
+      snippet: values.data.items[0].snippet
+    };
+    return channel;
+  }
+  catch {
+    return undefined;
+  }
+};
+
 
 app.get('/home', async(req, res) => {
   //let ourId = await getChannelID('@erikhaller5880');
@@ -347,22 +381,10 @@ app.get('/home', async(req, res) => {
           },
         })
         let idArray = [];
-        /*let idArray = [ {
-          id: undefined, snippet: undefined
-        }];*/
-        /*let objArray = [
-          {
-              id: undefined,
-              snippet: undefined
-          }
-        ];*/
-        
-        //console.log(values.data);
-        //console.log(values.data.items.length);
-        //console.log(videoIds);
-        values.data.items.forEach(item => {
+
+        /*values.data.items.forEach(item => {
           console.log(item.contentDetails);
-        });
+        });*/
         if (values.data.items.length == undefined || values.data.items.length == 0) {
           res.status(500).json({
               error,
@@ -378,46 +400,39 @@ app.get('/home', async(req, res) => {
         for(let i = 0; i<values.data.items.length; i++) {
           if (values.data.items[i].contentDetails.playlistItem) {
               //console.log('CONFIRMED');
-              //idArray[idArray.length].id = values.data.items[i].contentDetails.playlistItem.resourceId.videoId;
-              let vid = {id:values.data.items[i].contentDetails.playlistItem.resourceId.videoId,
-              snippet: undefined};
+              let vid = {
+                id:values.data.items[i].contentDetails.playlistItem.resourceId.videoId,
+                snippet: undefined,
+                chennel: undefined
+            };
               idArray.push(vid);
           }
           //console.log(values.data.items[i].contentDetails);
         }
         //console.log(videoIds);
-
-        /*if (values.data.items.length > 2) {
-          req.session.userInfo.id = 5;
-          console.log(req.session.userInfo.id);
-        }*/
         
         var temp = [];
         temp = await manyCalls(idArray, values.data.nextPageToken);
         //console.log(temp);
-        //await setIds(temp);
+        
         //console.log('MANYCALLS ACCOMPLISHED !!!!!!!!!!!!!!!!!!!!!!!');
 
-        /*userInfo.firstVid = temp[temp.length];
-        userInfo.lastVid = temp[0];*/
 
         var info = [];
         
         info = await vidCall(temp, info);
-        //info[0] = values.data.items[0].snippet;
-        //console.log(info);
-        /*info.forEach(vid => {
-          console.log(vid.snippet.title);
-        });*/
-        var mostFrequent = await getMostFrequent(info);
-        var mostWatched = info.find(vid => vid.id == mostFrequent)
+        
+        var freqVid = await getFreqVid(info);
+        var mostWatched = info.find(vid => vid.id == freqVid);
         console.log(mostWatched.id);
-        //var str = String(info[0]);
-        //console.log(typeof info[0]);
+        var freqCh = await getFreqChannel(info);
+        console.log(freqCh.snippet.thumbnails.high.url);
+        
 
         res.render('pages/home', {
           info,
           mostWatched,
+          freqCh,
           message: 'happy happy happy',
         });
         
@@ -457,18 +472,9 @@ app.get('/vidStats', async(req, res) => {
           },
         })
         let idArray = [];
-        values.data.items.forEach(item => {
+        /*values.data.items.forEach(item => {
           console.log(item.contentDetails);
-        });
-        /*let idArray = [ {
-          id: undefined, snippet: undefined
-        }];*/
-        /*let objArray = [
-          {
-              id: undefined,
-              snippet: undefined
-          }
-        ];*/
+        });*/
         
         //console.log(values.data);
         //console.log(values.data.items.length);
@@ -489,8 +495,11 @@ app.get('/vidStats', async(req, res) => {
           if (values.data.items[i].contentDetails.playlistItem) {
               //console.log('CONFIRMED');
               //idArray[idArray.length].id = values.data.items[i].contentDetails.playlistItem.resourceId.videoId;
-              let vid = {id:values.data.items[i].contentDetails.playlistItem.resourceId.videoId,
-              snippet: undefined};
+              let vid = {
+                id:values.data.items[i].contentDetails.playlistItem.resourceId.videoId,
+                snippet: undefined,
+                channel: undefined
+              };
               idArray.push(vid);
           }
           //console.log(values.data.items[i].contentDetails);
@@ -520,8 +529,8 @@ app.get('/vidStats', async(req, res) => {
         /*info.forEach(vid => {
           console.log(vid.snippet.title);
         });*/
-        var mostFrequent = await getMostFrequent(info);
-        var mostWatched = info.find(vid => vid.id == mostFrequent)
+        var freqVid = await getFreqVid(info);
+        var mostWatched = info.find(vid => vid.id == freqVid)
         console.log(mostWatched.id);
         //var str = String(info[0]);
         //console.log(typeof info[0]);
@@ -542,6 +551,22 @@ app.get('/vidStats', async(req, res) => {
           error: true,
           message: error.message,
       });
+  }
+});
+
+app.get('/channelStats', async(req,res) => {
+  try{
+
+  }
+  catch(error){
+    res.status(500).json({
+      error,
+  });
+  res.render('pages/channelStats', {
+      results: [],
+      error: true,
+      message: error.message,
+  });
   }
 });
 
