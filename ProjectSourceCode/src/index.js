@@ -186,6 +186,7 @@ app.post('/register', async (req, res) => {
   }
 });
 
+// -------------------------------------------AUTH MIDDLEWARE-------------------------------------
 
 const auth = (req, res, next) => {
   if (!req.session.user) {
@@ -200,14 +201,9 @@ app.use(auth);
 
 
 async function manyCalls(array, nextToken, id) {
-  //let ourId = await getChannelID(req.session.user.username);
   console.log('manycalls');
   let arr = array;
-  console.log('arr == array: ', arr == array);
-  //for (let i = 0; i < 5; i++) {
   while(nextToken) {
-      console.log('manycalls loop');
-      //if (!nextToken || nextToken == undefined) { return array; }
       let values = await axios({
           url: `https://www.googleapis.com/youtube/v3/activities`,
           method: 'GET',
@@ -216,11 +212,8 @@ async function manyCalls(array, nextToken, id) {
             'Accept-Encoding': 'application/json',
           },
           params: {
-            part: 'contentDetails', //what sort of data you want returned, i think?
-            //id,
+            part: 'contentDetails,snippet', //what sort of data you want returned, i think?
             channelId: id,
-            //channelId: 'UC_x5XG1OV2P6uZZ5FSM9Ttw', //put channel Id here, duh. should fetch from user on log in?
-            //channelId: 'UCs88GCjP5A3EBJb8QrNNiZQ',
             key: process.env.API_KEY,
             maxResults: 50, // you can choose the max number of things you would like to return
             publishedAfter: "2023-01-01T00:00:00.0Z", //this one is kinda hard to figure out. gets all info after date
@@ -228,49 +221,26 @@ async function manyCalls(array, nextToken, id) {
             pageToken: nextToken
           },
         })
-        //console.log(values.data);
-        console.log('values: ',values.data.items);
-        console.log('values info: ', values.data.pageInfo);
-        /*values.data.items.forEach(item => {
-          console.log(item.contentDetails);
-        });*/
-
         
         values.data.items.forEach(item => {
-          console.log(item.contentDetails);
           if(item.contentDetails.playlistItem && item.contentDetails.playlistItem.resourceId.kind == 'youtube#video') {
-            console.log('CONFIRMED');
             let vid = {
               id:item.contentDetails.playlistItem.resourceId.videoId,
-              snippet: undefined,
-              channel: undefined
+              snippet: item.snippet,
+              channel: item.snippet.channelId
             };
             arr.push(vid);
           }
         });
-        console.log('arr == array: ', arr == array);
-        console.log('arrlen: ', arr.length);
-        /*if (values.data.nextPageToken == undefined) {
-          console.log('EXITING');
-          return array;
-        }
-        else {*/
-      nextToken = values.data.nextPageToken;
-          //console.log(nextToken);
-        //}
+    nextToken = values.data.nextPageToken;
   }
   return arr;
 }
-async function manyChCalls(array, nextToken) {
+async function manyChCalls(array, nextToken) { //for channel stats page.
   let ourId = await getChannelID(req.session.user.username);
   console.log('manychcalls');
-  //for (let i = 0; i < 5; i++) {
   while(nextToken) {
       console.log('manychloop');
-      /*console.log('i =');
-      console.log(i);
-      console.log(nextToken);
-      console.log('---------------------------------');*/
       if (!nextToken || nextToken == undefined) { return array; }
       let values = await axios({
           url: `https://www.googleapis.com/youtube/v3/activities`,
@@ -281,10 +251,7 @@ async function manyChCalls(array, nextToken) {
           },
           params: {
             part: 'contentDetails', //what sort of data you want returned, i think?
-            //id,
             channelId: ourId,
-            //channelId: 'UC_x5XG1OV2P6uZZ5FSM9Ttw', //put channel Id here, duh. should fetch from user on log in?
-            //channelId: 'UCs88GCjP5A3EBJb8QrNNiZQ',
             key: process.env.API_KEY,
             maxResults: 50, // you can choose the max number of things you would like to return
             publishedAfter: "2023-01-01T00:00:00.0Z", //this one is kinda hard to figure out. gets all info after date
@@ -292,12 +259,6 @@ async function manyChCalls(array, nextToken) {
             pageToken: nextToken
           },
         })
-        //console.log(values.data);
-        //console.log(values.data.items.length);
-        /*values.data.items.forEach(item => {
-          console.log(item.contentDetails);
-        });*/
-
         for(let j = 0; j<values.data.items.length; j++) {
           if (values.data.items[j].contentDetails.subscription) {
               console.log('CONFIRMED');
@@ -308,69 +269,12 @@ async function manyChCalls(array, nextToken) {
               };
               array.push(vid);*/
           }
-          //console.log(values.data.items[i].contentDetails);
         }
-        /*if (values.data.nextPageToken == undefined) {
-          console.log('EXITING');
-          return array;
-        }
-        else {*/
-          nextToken = values.data.nextPageToken;
-          //console.log(nextToken);
-        //}
+    nextToken = values.data.nextPageToken;
   }
   return array;
 }
-
-/*async function vidCall(array, info) { //was originally going to get highest rated from this, but you need to have auth for that
-  //console.log(array);
-  let ids = array[0].id;
-  var nextToken;
-  for (let i = 1; i < array.length; i++) {
-      ids = ids.concat(',', array[i].id);
-  }
-  //try {
-    for (let i = 0; i < array.length%50; i++){
-      if( i == 0 || nextToken) {
-        let values = await axios({
-            url: `https://www.googleapis.com/youtube/v3/videos`,
-            method: 'GET',
-            dataType: 'json',
-            headers: {
-            'Accept-Encoding': 'application/json',
-            },
-            params: {
-            
-            part: 'snippet', //what sort of data you want returned, i think?
-            //channelId: 'UC_x5XG1OV2P6uZZ5FSM9Ttw', //put channel Id here, duh. should fetch from user on log in?
-            id: ids,
-            key: process.env.API_KEY,
-            maxResults: 50,//array.length, // you can choose the max number of things you would like to return
-            /*publishedAfter: "2023-01-01T00:00:00.0Z", //this one is kinda hard to figure out. gets all info after date
-            publishedBefore: "2023-01-08T00:00:00.0Z",
-            pageToken: nextToken
-            },
-        })
-        //let info = [];
-        if(values.data.nextPageToken) {nextToken = values.data.nextPageToken;}
-        
-        for(let i = 0; i < array.length; i++) {
-            var vid = {
-                id: array[i].id,
-                snippet: values.data.items[i].snippet,
-                channel: values.data.items[i].snippet.channelId
-            };
-            info.push(vid);
-        }
-
-        //console.log(info);
-        //console.log(values.data.items.length);
-    }
-    }
-    return info;
-}*/
 async function vidCall(array, info, count, nextToken) { //was originally going to get highest rated from this, but you need to have auth for that
-  //console.log(array);
   console.log('vidcall');
   let first = count*50
   let ids = array[first].id;
@@ -378,9 +282,7 @@ async function vidCall(array, info, count, nextToken) { //was originally going t
       ids = ids.concat(',', array[i].id);
   }
   var values;
-  //console.log('next: ', nextToken)
   if (nextToken != undefined){
-    //console.log('if');
     values = await axios({
         url: `https://www.googleapis.com/youtube/v3/videos`,
         method: 'GET',
@@ -389,8 +291,7 @@ async function vidCall(array, info, count, nextToken) { //was originally going t
         'Accept-Encoding': 'application/json',
         },
         params: {
-        part: 'snippet', //what sort of data you want returned, i think?
-        //channelId: 'UC_x5XG1OV2P6uZZ5FSM9Ttw', //put channel Id here, duh. should fetch from user on log in?
+        part: 'snippet,statistics', //what sort of data you want returned, i think?
         id: ids,
         key: process.env.API_KEY,
         maxResults: 50,//array.length, // you can choose the max number of things you would like to return
@@ -399,7 +300,6 @@ async function vidCall(array, info, count, nextToken) { //was originally going t
     })
   }
   else {
-    //console.log('else');
     values = await axios({
       url: `https://www.googleapis.com/youtube/v3/videos`,
       method: 'GET',
@@ -408,28 +308,24 @@ async function vidCall(array, info, count, nextToken) { //was originally going t
       'Accept-Encoding': 'application/json',
       },
       params: {
-      part: 'snippet', //what sort of data you want returned, i think?
-      //channelId: 'UC_x5XG1OV2P6uZZ5FSM9Ttw', //put channel Id here, duh. should fetch from user on log in?
+      part: 'snippet,statistics', //what sort of data you want returned, i think?
       id: ids,
       key: process.env.API_KEY,
       maxResults: 50,//array.length, // you can choose the max number of things you would like to return
       },
     })
-    //console.log('/else')
   }
-  console.log(values.data.items.length);
         
   for(let i = 0; i < Math.min(50, array.length-first); i++) {
     var vid = {
         id: array[i].id,
         snippet: values.data.items[i].snippet,
-        channel: values.data.items[i].snippet.channelId
+        channel: values.data.items[i].snippet.channelId,
+        stats: values.data.items[i].statistics
     };
     info.push(vid);
   }
 
-  //console.log(info);
-  //console.log(values.data.items.length);
   if(values.data.nextPageToken != undefined) {
     count++;
     nextToken = values.data.nextPageToken;
@@ -489,19 +385,12 @@ async function getFreqChannel(array){
         'Accept-Encoding': 'application/json',
       },
       params: {
-        
         part: 'snippet', //what sort of data you want returned, i think?
-        //forUsername: ,
         id: count.channel,
-        //channelId: 'UC_x5XG1OV2P6uZZ5FSM9Ttw', //put channel Id here, duh. should fetch from user on log in?
-        //channelId: 'UCs88GCjP5A3EBJb8QrNNiZQ',
         key: process.env.API_KEY,
         maxResults: 50, // you can choose the max number of things you would like to return
-        publishedAfter: "2023-01-01T00:00:00.0Z", //this one is kinda hard to figure out. gets all info after date
-        publishedBefore: "2024-01-01T00:00:00.0Z",
       },
     })
-    console.log(values.data.items);
     let channel = {
       id: values.data.items[0].id,
       snippet: values.data.items[0].snippet
@@ -513,11 +402,8 @@ async function getFreqChannel(array){
   }
 };
 
-
 app.get('/home', async(req, res) => {
   let ourId = await getChannelID(req.session.user.username);
-  console.log(ourId);
-  //console.log(req.session.user);
   try {
       let values = await axios({
           url: `https://www.googleapis.com/youtube/v3/activities`,
@@ -528,10 +414,8 @@ app.get('/home', async(req, res) => {
           },
           params: {
             
-            part: 'contentDetails', //what sort of data you want returned, i think?
+            part: 'contentDetails,snippet', //what sort of data you want returned, i think?
             channelId: ourId,
-            //channelId: 'UC_x5XG1OV2P6uZZ5FSM9Ttw', //put channel Id here, duh. should fetch from user on log in?
-            //channelId: 'UCs88GCjP5A3EBJb8QrNNiZQ',
             key: process.env.API_KEY,
             maxResults: 50, // you can choose the max number of things you would like to return
             publishedAfter: "2023-01-01T00:00:00.0Z", //this one is kinda hard to figure out. gets all info after date
@@ -540,10 +424,6 @@ app.get('/home', async(req, res) => {
         })
         let idArray = [];
         
-
-        /*values.data.items.forEach(item => {
-          console.log(item.contentDetails);
-        });*/
         if (values.data.items.length == undefined || values.data.items.length == 0) {
           res.status(500).json({
               error,
@@ -561,32 +441,22 @@ app.get('/home', async(req, res) => {
             let vid = {
               id:item.contentDetails.playlistItem.resourceId.videoId,
               snippet: undefined,
-              channel: undefined
+              channel: undefined,
+              stats: undefined
             };
             idArray.push(vid);
           }
         });
-        //console.log(videoIds);
         
         var temp = [];
-        
         temp = await manyCalls(idArray, values.data.nextPageToken, ourId);
-        console.log('clear');
-        //console.log(temp);
-        
-        //console.log('MANYCALLS ACCOMPLISHED !!!!!!!!!!!!!!!!!!!!!!!');
 
-
-        var info = [];
-        
+        var info = [];        
         info = await vidCall(temp, info, 0);
         
         var freqVid = await getFreqVid(info);
         var mostWatched = info.find(vid => vid.id == freqVid);
-        console.log(mostWatched.id);
         var freqCh = await getFreqChannel(info);
-        console.log(freqCh.snippet.thumbnails.high.url);
-        
 
         res.render('pages/home', {
           info,
@@ -609,7 +479,6 @@ app.get('/home', async(req, res) => {
 });
 
 app.get('/vidStats', async(req, res) => {
-  //let ourId = await getChannelID('@erikhaller5880');
   let ourId = await getChannelID(req.session.user.username);
   try {
       let values = await axios({
@@ -623,8 +492,6 @@ app.get('/vidStats', async(req, res) => {
             
             part: 'contentDetails', //what sort of data you want returned, i think?
             channelId: ourId,
-            //channelId: 'UC_x5XG1OV2P6uZZ5FSM9Ttw', //put channel Id here, duh. should fetch from user on log in?
-            //channelId: 'UCs88GCjP5A3EBJb8QrNNiZQ',
             key: process.env.API_KEY,
             maxResults: 50, // you can choose the max number of things you would like to return
             publishedAfter: "2020-01-01T00:00:01Z", //this one is kinda hard to figure out. gets all info after date
@@ -635,10 +502,6 @@ app.get('/vidStats', async(req, res) => {
         /*values.data.items.forEach(item => {
           console.log(item.contentDetails);
         });*/
-        
-        //console.log(values.data);
-        //console.log(values.data.items.length);
-        //console.log(videoIds);
         if (values.data.items.length == undefined || values.data.items.length == 0) {
           res.status(500).json({
               error,
@@ -653,7 +516,6 @@ app.get('/vidStats', async(req, res) => {
 
         values.data.items.forEach(item => {
           if(item.contentDetails.playlistItem && item.contentDetails.playlistItem.resourceId.kind == 'youtube#video') {
-            //console.log('CONFIRMED');
             let vid = {
               id:item.contentDetails.playlistItem.resourceId.videoId,
               snippet: undefined,
@@ -662,41 +524,26 @@ app.get('/vidStats', async(req, res) => {
             idArray.push(vid);
           }
         });
-        console.log(idArray.length);
-
-        /*if (values.data.items.length > 2) {
-          req.session.userInfo.id = 5;
-          console.log(req.session.userInfo.id);
-        }*/
         
         var temp = [];
         temp = await manyCalls(idArray, values.data.nextPageToken, ourId);
-        console.log(temp.length);
-        console.log('NEXT PAGE TOKEN:',values.data.nextPageToken);
-        //console.log(temp);
-        //await setIds(temp);
-        //console.log('MANYCALLS ACCOMPLISHED !!!!!!!!!!!!!!!!!!!!!!!');
-
-        /*userInfo.firstVid = temp[temp.length];
-        userInfo.lastVid = temp[0];*/
 
         var info = [];
-        
         info = await vidCall(temp, info, 0);
-        //info[0] = values.data.items[0].snippet;
         //console.log(info);
         /*info.forEach(vid => {
           console.log(vid.snippet.title);
         });*/
         var freqVid = await getFreqVid(info);
         var mostWatched = info.find(vid => vid.id == freqVid)
-        console.log(mostWatched.id);
-        //var str = String(info[0]);
-        //console.log(typeof info[0]);
+        
+        var sorted = info.sort((c1, c2) => (c1.stats.likeCount < c2.stats.likeCount) ? 1 : (c1.stats.likeCount > c2.stats.likeCount) ? -1 : 0);
+        var mostLiked = sorted[0];
 
         res.render('pages/vidStats', {
           info,
           mostWatched,
+          mostLiked,
           message: 'happy happy happy',
         });
         
@@ -727,8 +574,6 @@ app.get('/channelStats', async(req,res) => {
             
             part: 'contentDetails', //what sort of data you want returned, i think?
             channelId: ourId,
-            //channelId: 'UC_x5XG1OV2P6uZZ5FSM9Ttw', //put channel Id here, duh. should fetch from user on log in?
-            //channelId: 'UCs88GCjP5A3EBJb8QrNNiZQ',
             key: process.env.API_KEY,
             maxResults: 50, // you can choose the max number of things you would like to return
             publishedAfter: "2023-01-01T00:00:00.0Z", //this one is kinda hard to figure out. gets all info after date
@@ -747,9 +592,9 @@ app.get('/channelStats', async(req,res) => {
           return;
         }
         for(let i = 0; i < values.data.items.length; i++) {
-          console.log('i: ', i);
+          //console.log('i: ', i);
           if (values.data.items[i].contentDetails.subscription) {
-            console.log('CONFIRMED');
+            //console.log('CONFIRMED');
             //idArray[idArray.length].id = values.data.items[i].contentDetails.playlistItem.resourceId.videoId;
             /*let vid = {
               id:values.data.items[i].contentDetails.playlistItem.resourceId.videoId,
@@ -761,7 +606,6 @@ app.get('/channelStats', async(req,res) => {
         }
         let temp = []
         temp = await manyChCalls(temp, values.data.nextPageToken);
-        console.log(temp);
         res.render('pages/channelStats', {
           values,
           message: 'happy happy happy',
@@ -779,16 +623,41 @@ app.get('/channelStats', async(req,res) => {
   }
 });
 
-app.get('/profile', (req,res) => {
+app.get('/profile', async (req,res) => {
+  //let handle = req.session.user.username;
+  try {
+    let values = await axios({
+      url: `https://www.googleapis.com/youtube/v3/channels`,
+      method: 'GET',
+      dataType: 'json',
+      headers: {
+        'Accept-Encoding': 'application/json',
+      },
+      params: {
+        part: 'snippet', //what sort of data you want returned, i think?
+        forHandle: req.session.user.username, //put channel name/handle here, duh. should fetch from user on log in?
+        key: process.env.API_KEY,
+      },
+    })
+    let myChannel = values.data.items[0];
     res.render('pages/profile', {
+        myChannel,
         username: req.session.user.username,
         email: req.session.user.email,
         password: req.session.user.password,
     });
+  }
+  catch(error) {
+    res.render('pages/profile', {
+      error: error,
+      username: req.session.user.username,
+      email: req.session.user.email,
+      password: req.session.user.password,
+    });
+  }
 });
 
 app.get('/stats1', (req,res) => {
-    var channelID;
     axios({
         url: `https://www.googleapis.com/youtube/v3/channels`,
         method: 'GET',
@@ -799,7 +668,7 @@ app.get('/stats1', (req,res) => {
         params: {
           
           part: 'id', //what sort of data you want returned, i think?
-          forHandle: '@erikhaller5880', //put channel Id here, duh. should fetch from user on log in?
+          forHandle: req.session.user.username, //put channel Id here, duh. should fetch from user on log in?
           key: process.env.API_KEY,
         },
       })
