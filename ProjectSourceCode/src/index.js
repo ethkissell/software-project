@@ -165,13 +165,11 @@ app.get('/register', (req, res) => {
 
 app.post('/register', async (req, res) => {
     try{
-        
-        if (req.body.username == req.body.password) {
-            return res.status(400).render('pages/register');
-        }
-
         var id = await getChannelID(req.body.username);
         console.log(id);
+        if (req.body.username == req.body.password || id == undefined) {
+            return res.status(400).render('pages/register');
+        }
         //hash the password using bcrypt library
         const hash = await bcrypt.hash(req.body.password, 10);
         const query = 'INSERT INTO users (username,password) VALUES ($1,$2)';
@@ -538,12 +536,16 @@ app.get('/vidStats', async(req, res) => {
         var mostWatched = info.find(vid => vid.id == freqVid)
         
         var sorted = info.sort((c1, c2) => (c1.stats.likeCount < c2.stats.likeCount) ? 1 : (c1.stats.likeCount > c2.stats.likeCount) ? -1 : 0);
-        var mostLiked = sorted[0];
+        //let likeExtrema = []
+        let likeExtrema = sorted[0];
+        //likeExtrema[1] = sorted[sorted.length];
+        //console.log(likeExtrema[1])
+
 
         res.render('pages/vidStats', {
           info,
           mostWatched,
-          mostLiked,
+          likeExtrema,
           message: 'happy happy happy',
         });
         
